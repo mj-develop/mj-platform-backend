@@ -15,7 +15,8 @@ app.use('/api', routes);
 mongoose.connect(
     process.env.MONGO_URL, {
         useNewUrlParser: true,
-        useUnifiedTopology: tr
+        useUnifiedTopology: true,
+        useCreateIndex: true
     }
 );
 
