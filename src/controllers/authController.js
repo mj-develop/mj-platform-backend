@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const mailer = require('../../src/modules');
 
 module.exports = {
     async register(req, res) {
@@ -39,6 +41,42 @@ module.exports = {
 
         res.send( { user, token } ); 
     },
+
+    async forgot_password(req, res) {
+        const { email } = req.body;
+
+        try {
+            const user = await User.findOne({ email });
+            
+            if (!user)
+                return res.status(400).send({ error: 'User nor found' });
+
+            const token = crypto.randomBytes(20).toString('hex');
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+    
+            await User.findByIdAndUpdate(user.id, {
+                '$set': {
+                    passwordResetToken: token,
+                    passwordResetExpires: now,
+                }
+            });
+
+            mailer.sendMail({
+                to: email,
+                from: 'thiago.oliveira@tap4mobile.com.br',
+                template: 'auth/forgot_password',
+                context:{ token }
+            }, (err) => {
+                if (err)
+                    return res.status(400).send({ error: 'Cannot send forgot password email' });
+    
+                return res.send();
+            });
+        } catch (err) {
+            res.status(400).send({ error: 'Error on forgot password, try again' });
+        }
+    }
 }
 
 function generateToken(params = {}) {
