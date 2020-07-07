@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const mailer = require('../../src/modules');
+const mailer = require('../modules/mailer');
 
 module.exports = {
     async register(req, res) {
