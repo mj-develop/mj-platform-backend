@@ -76,6 +76,33 @@ module.exports = {
         } catch (err) {
             res.status(400).send({ error: 'Error on forgot password, try again' });
         }
+    },
+
+    async reset_password(req, res) {
+        const { email, token, password } = req.body;
+
+        try {
+            const user = await User.findOne({ email })
+                .select('+passwordResetToken passwordResetExpires');
+        
+            if (!user)
+                return res.status(400).send({ error: 'User not found'});
+
+            if (token !== user.passwordResetToken)
+                return res.status(400).send({ error: 'Token invalid' });
+
+            const now = new Date();
+
+            if (now > user.passwordResetExpires)
+                return res.status(400).send({ error: 'Token expired, get a new one' });
+            
+            user.password = password;
+
+            res.send();
+
+        } catch (error) {
+            res.status(400).send({ error: 'Cannot reset password, try again' });
+        }
     }
 }
 
