@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const mailer = require('../modules/mailer');
+const { profile } = require('console');
 
 module.exports = {
     async register(req, res) {
@@ -42,6 +43,18 @@ module.exports = {
         res.send( { user, token } ); 
     },
 
+    async profile(req, res) {
+        console.log(req.userId);
+        const { userId }  = req.userId;
+
+        const user = await User.findOne( { userId } );
+        
+        if (!user)
+            return res.status(400).send({ error: 'User not found' });
+
+        res.send({ user });
+    },
+
     async forgot_password(req, res) {
         const { email } = req.body;
 
@@ -63,8 +76,8 @@ module.exports = {
             });
 
             mailer.sendMail({
+                from: 'mjplatform@mjplatform.com',
                 to: email,
-                from: 'thiago.oliveira@tap4mobile.com.br',
                 template: 'auth/forgot_password',
                 context:{ token }
             }, (err) => {
