@@ -108,8 +108,12 @@ module.exports = {
 
             if (now > user.passwordResetExpires)
                 return res.status(400).send({ error: 'Token expired, get a new one' });
-            
+
             user.password = password;
+            user.passwordResetToken = null;
+            user.passwordResetExpires = null;
+
+            await user.save();
 
             res.send();
 
