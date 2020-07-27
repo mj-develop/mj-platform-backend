@@ -1,4 +1,5 @@
 const Student = require('../models/Student');
+const User = require('../models/User');
 
 module.exports = {
 
@@ -28,6 +29,13 @@ module.exports = {
                 return res.status(400).send({ error: 'Student already registration with the email filled'});
 
             const student = await Student.create(req.body);
+
+            if (await User.findOne({email}))
+                return res.status(400).send({ error: 'User already registraded'});
+
+            const user = await User.create(req.body);
+
+            user.password = undefined;
 
             return res.send({ student });
         } catch(err) {
