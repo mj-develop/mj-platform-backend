@@ -35,8 +35,6 @@ module.exports = {
 
             const user = await User.create(req.body);
 
-            user.password = undefined;
-
             return res.send({ student });
         } catch(err) {
             return res.status(400).send({error: 'Registration failed'});
