@@ -4,6 +4,7 @@ const authMiddleware = require('./middleware/auth');
 const AuthController = require('./controllers/authController');
 const StudentController = require('./controllers/studentController');
 const CourseController = require('./controllers/courseController');
+const ClassController = require('./controllers/classController');
 
 routes.post("/register", AuthController.register);
 routes.post("/login", AuthController.login);
@@ -22,5 +23,11 @@ routes.get("/courses/:id", CourseController.show);
 routes.post("/courses", CourseController.create);
 routes.put("/courses/:id", CourseController.update);
 routes.delete("/courses/:id", CourseController.destroy);
+
+routes.get("/classes", ClassController.index);
+routes.get("/classes/:id", ClassController.show);
+routes.post("/classes", ClassController.create);
+routes.put("/classes/:id", ClassController.update);
+routes.delete("/classes/:id", ClassController.destroy);
 
 module.exports = routes;
