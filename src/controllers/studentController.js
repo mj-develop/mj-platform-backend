@@ -22,7 +22,7 @@ module.exports = {
     },
 
     async create (req, res) {
-        const { name, email, registration } = req.body;
+        const { email } = req.body;
 
         try { 
             if (await Student.findOne({email}))
@@ -37,7 +37,7 @@ module.exports = {
 
             return res.send({ student });
         } catch(err) {
-            return res.status(400).send({error: 'Registration failed'});
+            return res.status(400).send({error: err});
         }
     },
 
