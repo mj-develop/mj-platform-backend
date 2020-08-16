@@ -1,4 +1,5 @@
 const Student = require('../models/Student');
+const Class = require('../models/Class');
 const User = require('../models/User');
 
 module.exports = {
@@ -45,6 +46,10 @@ module.exports = {
         try { 
             const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
+            if (req.body.name) {
+                Class.findOneAndUpdate({'students._id': data._id }, {$set: {'students.$.name':req.body.name}}, {}, (err, data) => {});
+            }
+
             return res.json(student);
         } catch (error) {
             return res.status(400).send({ error: 'Was not possible to update'});;
@@ -55,6 +60,8 @@ module.exports = {
         const student = await Student.findById(req.params.id);
         
         await student.remove();
+
+        Class.update({'students._id': data._id }, {$pull: {'students':{'_id':data._id}}}, {}, (err, data) => {});
 
         return res.send();
     }
