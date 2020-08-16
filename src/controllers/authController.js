@@ -3,16 +3,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const mailer = require('../modules/mailer');
-const { profile } = require('console');
 
 module.exports = {
     async register(req, res) {
         const { email } = req.body;
 
         try {
-            if (await User.findOne({email}))
-                return res.status(400).send({ error: 'User already registraded'});
-
+            if (await User.findOne({email})) {
+                return res.status(400).send({ error: 'user.already.registred'});
+            }
+                
             const user = await User.create(req.body);
             
             user.password = undefined;
@@ -21,7 +21,7 @@ module.exports = {
 
             return res.send({ user, token });
         } catch(err) {
-            return res.status(400).send({error: 'Resgistration failed' });
+            return res.status(400).send({error: err });
         }
     },
 
@@ -31,10 +31,10 @@ module.exports = {
         const user = await User.findOne({ email }).select('+password');
 
         if (!user) 
-            return res.status(400).send({ error: 'User not found'});
+            return res.status(404).send({ error: 'user.not.found'});
 
         if (!await bcrypt.compare(password, user.password))
-            return res.status(400).send({ error: 'Invalid password'});
+            return res.status(400).send({ error: 'invalid.password'});
         
         user.password = undefined;
 
@@ -50,7 +50,7 @@ module.exports = {
         const user = await User.findOne( { userId } );
         
         if (!user)
-            return res.status(400).send({ error: 'User not found' });
+            return res.status(404).send({ error: 'user.not.found' });
 
         res.send({ user });
     },
@@ -62,7 +62,7 @@ module.exports = {
             const user = await User.findOne({ email });
             
             if (!user)
-                return res.status(400).send({ error: 'User nor found' });
+                return res.status(404).send({ error: 'user.not.found' });
 
             const token = crypto.randomBytes(20).toString('hex');
             const now = new Date();
@@ -82,12 +82,12 @@ module.exports = {
                 context:{ token }
             }, (err) => {
                 if (err)
-                    return res.status(400).send({ error: 'Cannot send forgot password email' });
+                    return res.status(400).send({ error: 'cannot.send.forgot.password.email' });
     
                 return res.send();
             });
         } catch (err) {
-            res.status(400).send({ error: 'Error on forgot password, try again' });
+            res.status(400).send({ error: 'error.on.forgot.password' });
         }
     },
 
@@ -99,15 +99,15 @@ module.exports = {
                 .select('+passwordResetToken passwordResetExpires');
         
             if (!user)
-                return res.status(400).send({ error: 'User not found'});
+                return res.status(400).send({ error: 'user.not.found'});
 
             if (token !== user.passwordResetToken)
-                return res.status(400).send({ error: 'Token invalid' });
+                return res.status(400).send({ error: 'token.invalid' });
 
             const now = new Date();
 
             if (now > user.passwordResetExpires)
-                return res.status(400).send({ error: 'Token expired, get a new one' });
+                return res.status(400).send({ error: 'token.expired' });
 
             user.password = password;
             user.passwordResetToken = null;
@@ -118,7 +118,7 @@ module.exports = {
             res.send();
 
         } catch (error) {
-            res.status(400).send({ error: 'Cannot reset password, try again' });
+            res.status(400).send({ error: 'cannot.reset.password' });
         }
     }
 }

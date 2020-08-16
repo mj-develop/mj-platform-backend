@@ -4,11 +4,11 @@ const mongoosePaginate = require('mongoose-paginate');
 const CourseSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'name.is.empty'],
     },
     description: {
         type: String,
-        required: true,
+        required: [true, 'description.is.empty'],
     },
     createdAt: {
         type: Date,

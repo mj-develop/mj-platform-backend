@@ -1,4 +1,5 @@
 const Discipline = require('../models/Discipline');
+const utils = require('../util/utils');
 
 module.exports = {
 
@@ -16,7 +17,7 @@ module.exports = {
             
             res.json(discipline);
         } catch (error) {
-            return res.status(400).send({ error: 'discipline not found'});;
+            return res.status(400).send({ error: 'discipline.not.found'});;
         }
     },
 
@@ -28,7 +29,7 @@ module.exports = {
 
             return res.send({ discipline });
         } catch(err) {
-            return res.status(400).send({error: 'Registration failed'});
+            return res.status(400).send({error: utils.errors(err)});
         }
     },
 
@@ -38,7 +39,7 @@ module.exports = {
 
             return res.json(discipline);
         } catch (error) {
-            return res.status(400).send({ error: 'Was not possible to update'});;
+            return res.status(400).send({ error: 'was.not.possible.to.update'});;
         }
     },
 

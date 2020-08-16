@@ -4,10 +4,11 @@ const mongoosePaginate = require('mongoose-paginate');
 const DisciplineSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'name.is.empty'],
     },
     description: {
         type: String,
+        required: [true, 'description.is.empty'],
     },
     createdAt: {
         type: Date,

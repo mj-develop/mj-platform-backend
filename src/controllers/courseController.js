@@ -1,4 +1,5 @@
 const Course = require('../models/Course');
+const utils = require('../util/utils');
 
 module.exports = {
 
@@ -15,20 +16,18 @@ module.exports = {
             const courses = await Course.findById(req.params.id);
             
             res.json(courses);
-        } catch (error) {
-            return res.status(400).send({ error: 'Course not found'});;
+        } catch (err) {
+            return res.status(404).send({ error: 'course.not.found'});;
         }
     },
 
     async create (req, res) {
-        const { name, description } = req.body;
-
         try { 
             const course = await Course.create(req.body);
 
             return res.send({ course });
         } catch(err) {
-            return res.status(400).send({error: 'Registration failed'});
+            return res.status(400).send({error: utils.errors(err)});
         }
     },
 
@@ -38,7 +37,7 @@ module.exports = {
 
             return res.json(course);
         } catch (error) {
-            return res.status(400).send({ error: 'Was not possible to update'});;
+            return res.status(400).send({ error: 'was.not.possible.update'});;
         }
     },
 
