@@ -1,4 +1,5 @@
 const Course = require('../models/Course');
+const Class = require('../models/Class');
 const utils = require('../util/utils');
 
 module.exports = {
@@ -34,6 +35,18 @@ module.exports = {
     async update(req, res) {
         try { 
             const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+            if (req.body.name) {
+                let conditions = {'course._id': data._id};
+                let update = {
+                    $set : {
+                        'course.name' : req.body.name
+                    }
+                };
+                let options = { multi: true };
+
+                Class.update(conditions, update, options, (err, numUpdated) => {});
+            }
 
             return res.json(course);
         } catch (error) {
