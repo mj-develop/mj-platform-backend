@@ -18,7 +18,7 @@ module.exports = {
             
             res.json(student);
         } catch (error) {
-            return res.status(400).send({ error: 'User not found'});;
+            return res.status(400).send({ error: 'user.not.found'});;
         }
     },
 
@@ -26,33 +26,30 @@ module.exports = {
         const { email } = req.body;
 
         try { 
-            if (await Student.findOne({email}))
-                return res.status(400).send({ error: 'Student already registration with the email filled'});
-
             const student = await Student.create(req.body);
 
             if (await User.findOne({email}))
-                return res.status(400).send({ error: 'User already registraded'});
+                return res.status(400).send({ error: 'user.already.registraded'});
 
             const user = await User.create(req.body);
 
-            return res.send({ student });
+            return res.send(student);
         } catch(err) {
             return res.status(400).send({error: err});
         }
     },
 
     async update(req, res) {
-        try { 
+        try {
             const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
+            
             if (req.body.name) {
-                Class.findOneAndUpdate({'students._id': data._id }, {$set: {'students.$.name':req.body.name}}, {}, (err, data) => {});
+                Class.update({'students._id': student._id }, {$set: {'students.$.name': req.body.name}}, { multi: true }, (err, data) => {});
             }
 
             return res.json(student);
         } catch (error) {
-            return res.status(400).send({ error: 'Was not possible to update'});;
+            return res.status(400).send({ error: 'was.not.possible.update'});
         }
     },
 
@@ -61,7 +58,7 @@ module.exports = {
         
         await student.remove();
 
-        Class.update({'students._id': data._id }, {$pull: {'students':{'_id':data._id}}}, {}, (err, data) => {});
+        Class.update({'students._id': student._id }, {$pull: {'students':{'_id':student._id}}}, {}, (err, data) => {});
 
         return res.send();
     }

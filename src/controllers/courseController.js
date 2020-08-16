@@ -37,7 +37,7 @@ module.exports = {
             const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
             if (req.body.name) {
-                let conditions = {'course._id': data._id};
+                let conditions = {'course._id': course._id};
                 let update = {
                     $set : {
                         'course.name' : req.body.name

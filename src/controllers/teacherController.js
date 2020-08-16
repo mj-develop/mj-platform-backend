@@ -17,21 +17,18 @@ module.exports = {
             
             res.json(teacher);
         } catch (error) {
-            return res.status(400).send({ error: 'User not found'});;
+            return res.status(404).send({ error: 'user.not.found'});;
         }
     },
 
     async create (req, res) {
         const { email } = req.body;
 
-        try { 
-            if (await Teacher.findOne({email}))
-                return res.status(400).send({ error: 'Teacher already registration with the email filled'});
-
+        try {
             const teacher = await Teacher.create(req.body);
 
             if (await User.findOne({email}))
-                return res.status(400).send({ error: 'User already registraded'});
+                return res.status(400).send({ error: 'user.already.registraded'});
 
             const user = await User.create(req.body);
 
@@ -47,7 +44,7 @@ module.exports = {
 
             return res.json(teacher);
         } catch (error) {
-            return res.status(400).send({ error: 'Was not possible to update'});;
+            return res.status(400).send({ error: 'was.not.possible.update'});;
         }
     },
 

@@ -31,6 +31,9 @@ module.exports = {
 
             if (key == "course._id")
                 return "course.id.malformatted"  
+
+            if (key.substr(0, 8) == 'students' && key.substr(-2) == 'id')
+                return "students.id.malformatteds"
             
             return err.errors[key] ? err.errors[key].properties.message : field_name; 
         });

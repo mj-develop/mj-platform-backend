@@ -1,4 +1,5 @@
 const Classe = require('../models/Class');
+const utils = require('../util/utils');
 
 module.exports = {
 
@@ -16,19 +17,17 @@ module.exports = {
             
             res.json(clasx);
         } catch (error) {
-            return res.status(400).send({ error: 'class not found'});;
+            return res.status(400).send({ error: 'class.not.found'});;
         }
     },
 
     async create (req, res) {
-        const { name, course, serie, education_type } = req.body;
-
         try { 
             const clasx = await Classe.create(req.body);
 
             return res.send({ clasx });
         } catch(err) {
-            return res.status(400).send({error: 'Registration failed'});
+            return res.status(400).send({error: utils.errors(err)});
         }
     },
 
@@ -38,7 +37,7 @@ module.exports = {
 
             return res.json(clasx);
         } catch (error) {
-            return res.status(400).send({ error: 'Was not possible to update'});;
+            return res.status(400).send({ error: 'was.not.possible.update'});;
         }
     },
 

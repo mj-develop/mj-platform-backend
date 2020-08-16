@@ -17,7 +17,7 @@ module.exports = {
             
             res.json(discipline);
         } catch (error) {
-            return res.status(400).send({ error: 'discipline.not.found'});;
+            return res.status(404).send({ error: 'discipline.not.found'});;
         }
     },
 
