@@ -56,6 +56,12 @@ module.exports = {
 
     async destroy(req, res) {
         const course = await Course.findById(req.params.id);
+
+        const classe = await Class.find({'course._id': data._id}).select('_id');
+        
+        if (classe.length > 0) {
+            return res.status(405).json({error: 'not.delete.course.with.classes'});
+        }
         
         await course.remove();
 
