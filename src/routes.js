@@ -37,6 +37,7 @@ routes.get("/classes/:id", ClassController.show);
 routes.post("/classes", ClassController.create);
 routes.put("/classes/:id", ClassController.update);
 routes.delete("/classes/:id", ClassController.destroy);
+routes.patch("/classes/:id/students", ClassController.managerStudents);
 
 routes.get("/disciplines", DisciplineController.index);
 routes.get("/disciplines/:id", DisciplineController.show);

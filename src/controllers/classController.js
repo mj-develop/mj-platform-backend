@@ -37,7 +37,7 @@ module.exports = {
 
             return res.json(clasx);
         } catch (error) {
-            return res.status(400).send({ error: 'was.not.possible.update'});;
+            return res.status(400).send({ error: 'was.not.possible.update'});
         }
     },
 
@@ -47,5 +47,37 @@ module.exports = {
         await clasx.remove();
 
         return res.send();
+    },
+
+    async managerStudents(req, res) {
+        const { action } = req.query;
+
+        const students = req.body.students;
+
+        try {
+            if (action.toLowerCase() == 'add') {
+                Object.keys(students).map(async (index) => {
+                    //console.log(students[index]);
+                    await Classe.update(
+                        {'_id':req.params.id}, 
+                        {$push: {'students':{'_id':students[index]._id, 'name': students[index].name}}}
+                    )
+                })
+            } else {
+                Object.keys(students).map(async (index) => {
+                    Classe.update(
+                        {'_id':req.params.id, 'students._id': students[index]._id }, 
+                        {$pull: {'students':{'_id':students[index]._id}}}, 
+                        {}, 
+                        (err, data) => {}
+                    )
+                })
+            }
+
+            const clasx = await Classe.findById(req.params.id);
+            return res.json(clasx);
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
     }
 }
