@@ -1,4 +1,5 @@
 const Plan = require('../models/Plan');
+const Student = require('../models/Student');
 const utils = require('../util/utils');
 
 module.exports = {
@@ -42,8 +43,23 @@ module.exports = {
     },
 
     async update(req, res) {
-        try { 
-            const plan = await Plan.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        try {
+
+            let data = req.body;
+
+            if (data.access_time.duration == '12') {
+                data.period = "anual";
+            } else if (data.access_time.duration == '6') {
+                data.period = "semestral";
+            } else {
+                data.period = "trimestral";
+            }
+
+            const plan = await Plan.findByIdAndUpdate(req.params.id, data, { new: true });
+
+            if (req.body.education_type || req.body.access_time.duration) {
+                Student.update({'plan._id': plan._id }, {$set: {'plan.name': `${plan.education_type} - ${plan.period}`}}, { multi: true }, (err, data) => {});
+            }
 
             return res.json(plan);
         } catch (error) {
@@ -53,9 +69,44 @@ module.exports = {
 
     async destroy(req, res) {
         const plan = await Plan.findById(req.params.id);
+
+        if (plan.students) {
+            return res.status(405).json({error: 'not.delete.plan.with.students'});
+        }
         
         await plan.remove();
 
         return res.send();
     },
+
+    async managerDisciplines(req, res) {
+        const { action } = req.query;
+
+        const disciplines = req.body.disciplines;
+
+        try {
+            if (action.toLowerCase() == 'add') {
+                Object.keys(disciplines).map(async (index) => {
+                    await Plan.update(
+                        {'_id':req.params.id}, 
+                        {$push: {'disciplines':{'_id':disciplines[index]._id, 'name': disciplines[index].name}}}
+                    )
+                })
+            } else {
+                Object.keys(disciplines).map(async (index) => {
+                    Plan.update(
+                        {'_id':req.params.id, 'disciplines._id': disciplines[index]._id }, 
+                        {$pull: {'disciplines':{'_id':disciplines[index]._id}}}, 
+                        {}, 
+                        (err, data) => {}
+                    )
+                })
+            }
+
+            const plan = await Plan.findById(req.params.id);
+            return res.json(plan);
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
+    }
 }

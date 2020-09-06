@@ -52,5 +52,6 @@ routes.get("/plans/:id", PlanController.show);
 routes.post("/plans", PlanController.create);
 routes.put("/plans/:id", PlanController.update);
 routes.delete("/plans/:id", PlanController.destroy);
+routes.patch("/plans/:id/disciplines", PlanController.managerDisciplines);
 
 module.exports = routes;
