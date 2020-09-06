@@ -43,9 +43,9 @@ module.exports = {
     async update(req, res) {
         try {
             const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            
+
             if (req.body.name) {
-                Class.update({'students._id': student._id }, {$set: {'students.$.name': req.body.name}}, { multi: true }, (err, data) => {});
+                Plan.update({'disciplines._id': discipline._id }, {$set: {'disciplines.$.name': req.body.name}}, { multi: true }, (err, data) => {});
             }
 
             return res.json(student);
@@ -59,7 +59,7 @@ module.exports = {
         
         await student.remove();
 
-        Class.update({'students._id': student._id }, {$pull: {'students':{'_id':student._id}}}, {}, (err, data) => {});
+        Plan.update({'students._id': student._id }, {$pull: {'students':{'_id':student._id}}}, {}, (err, data) => {});
 
         return res.send();
     },
