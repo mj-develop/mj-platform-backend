@@ -25,14 +25,18 @@ module.exports = {
 
     async create (req, res) {
         const { email } = req.body;
+        const data = req.body;
 
         try { 
-            const student = await Student.create(req.body);
-
             if (await User.findOne({email}))
                 return res.status(400).send({ error: 'user.already.registraded'});
-
+            
             const user = await User.create(req.body);
+
+            data.user._id = user._id;
+            data.user.username = user.username;
+
+            const student = await Student.create(data);
 
             return res.send(student);
         } catch(err) {

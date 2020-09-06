@@ -1,16 +1,22 @@
 const mongoose = require('mongoose');
+const Schema =  mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate');
 
 const utils = require('../util/utils');
 
-const TeacherSchema = new mongoose.Schema({
+const TeacherSchema = new Schema({
     titulation: {
         type: String,
         required: [true, 'titulation.is.empty']
     },
-    account: {
-        type: String,
-        required: false
+    user: {
+        _id: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'users'
+        },
+        username: {
+            type: String
+        },
     },
     name: {
         type: String,

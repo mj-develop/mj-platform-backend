@@ -5,9 +5,14 @@ const mongoosePaginate = require('mongoose-paginate');
 const utils = require('../util/utils');
 
 const StudentSchema = new Schema({
-    account: {
-        type: String,
-        required: false
+    user: {
+        _id: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'users'
+        },
+        username: {
+            type: String
+        },
     },
     name: {
         type: String,
