@@ -54,17 +54,15 @@ const PlanSchema = new Schema({
         type: Number,
         required: [true, 'cash.value.is.empty']
     },
-    disciplines: {
+    disciplines: [{
         _id: { 
             type: Schema.Types.ObjectId, 
-            ref: 'disciplines',
-            required: [true, 'discipline.id.is.empty']        
+            ref: 'disciplines'       
         },
         name: {
-            type: String,
-            required: [true, 'discipline.name.is.empty']
+            type: String
         },
-    },
+    }],
     students: [{
         _id: { 
             type: Schema.Types.ObjectId, 
