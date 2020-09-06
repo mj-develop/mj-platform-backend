@@ -7,6 +7,7 @@ const CourseController = require('./controllers/courseController');
 const ClassController = require('./controllers/classController');
 const DisciplineController = require('./controllers/disciplineController');
 const TeacherController = require('./controllers/teacherController');
+const PlanController = require('./controllers/planController');
 
 routes.post("/register", AuthController.register);
 routes.post("/login", AuthController.login);
@@ -44,5 +45,11 @@ routes.get("/disciplines/:id", DisciplineController.show);
 routes.post("/disciplines", DisciplineController.create);
 routes.put("/disciplines/:id", DisciplineController.update);
 routes.delete("/disciplines/:id", DisciplineController.destroy);
+
+routes.get("/plans", PlanController.index);
+routes.get("/plans/:id", PlanController.show);
+routes.post("/plans", PlanController.create);
+routes.put("/plans/:id", PlanController.update);
+routes.delete("/plans/:id", PlanController.destroy);
 
 module.exports = routes;
