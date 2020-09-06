@@ -1,4 +1,5 @@
 const Discipline = require('../models/Discipline');
+const Plan = require('../models/Plan');
 const utils = require('../util/utils');
 
 module.exports = {
@@ -37,6 +38,10 @@ module.exports = {
         try { 
             const discipline = await Discipline.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
+            if (req.body.name) {
+                Plan.update({'disciplines._id': discipline._id }, {$set: {'disciplines.$.name': req.body.name}}, { multi: true }, (err, data) => {});
+            }
+
             return res.json(discipline);
         } catch (error) {
             return res.status(400).send({ error: 'was.not.possible.to.update'});;
@@ -47,6 +52,8 @@ module.exports = {
         const discipline = await Discipline.findById(req.params.id);
         
         await discipline.remove();
+
+        Plan.update({'disciplines._id': discipline._id }, {$pull: {'disciplines':{'_id':discipline._id}}}, {}, (err, data) => {});
 
         return res.send();
     }
