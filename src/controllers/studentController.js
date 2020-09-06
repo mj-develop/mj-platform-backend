@@ -55,11 +55,27 @@ module.exports = {
     },
 
     async destroy(req, res) {
-        const student = await Student.findById(req.params.id);
+        const data = await Student.findById(req.params.id);
         
-        await student.remove();
+        try {
+            if (!data) {
+                return res.status(404).send({ error: 'student.not.found'});
+            }
 
-        Plan.update({'students._id': student._id }, {$pull: {'students':{'_id':student._id}}}, {}, (err, data) => {});
+            if (data.isDeleted) {
+                data.isDeleted = false;
+                data.deletedAt = null;
+            } else {
+                data.isDeleted = true;
+                data.deletedAt = Date.now();
+            }
+            
+            await data.save();
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
+
+        Plan.update({'students._id': data._id }, {$pull: {'students':{'_id':data._id}}}, {}, (err, data) => {});
 
         return res.send();
     },

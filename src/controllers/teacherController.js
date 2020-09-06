@@ -49,9 +49,25 @@ module.exports = {
     },
 
     async destroy(req, res) {
-        const teacher = await Teacher.findById(req.params.id);
+        const data = await Teacher.findById(req.params.id);
         
-        await teacher.remove();
+        try {
+            if (!data) {
+                return res.status(404).send({ error: 'teacher.not.found'});
+            }
+
+            if (data.isDeleted) {
+                data.isDeleted = false;
+                data.deletedAt = null;
+            } else {
+                data.isDeleted = true;
+                data.deletedAt = Date.now();
+            }
+            
+            await data.save();
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
 
         return res.send();
     }

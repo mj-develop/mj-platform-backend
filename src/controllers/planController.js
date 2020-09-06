@@ -68,15 +68,31 @@ module.exports = {
     },
 
     async destroy(req, res) {
-        const plan = await Plan.findById(req.params.id);
+        const data = await Plan.findById(req.params.id);
 
-        if (plan.students) {
+        if (data.students) {
             return res.status(405).json({error: 'not.delete.plan.with.students'});
         }
         
-        await plan.remove();
+        try {
+            if (!data) {
+                return res.status(404).send({ error: 'plan.not.found'});
+            }
 
-        return res.send();
+            if (data.isDeleted) {
+                data.isDeleted = false;
+                data.deletedAt = null;
+            } else {
+                data.isDeleted = true;
+                data.deletedAt = Date.now();
+            }
+            
+            await data.save();
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
+    
+        return res.status(201).json();
     },
 
     async managerDisciplines(req, res) {

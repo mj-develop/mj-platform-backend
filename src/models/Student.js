@@ -62,6 +62,13 @@ const StudentSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    deletedAt: {
+        type: Date
     }
 });
 

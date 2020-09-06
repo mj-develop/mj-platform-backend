@@ -49,12 +49,28 @@ module.exports = {
     },
 
     async destroy(req, res) {
-        const discipline = await Discipline.findById(req.params.id);
-        
-        await discipline.remove();
+        try {
+            const data = await Discipline.findOne({'_id': req.params.id});
 
-        Plan.update({'disciplines._id': discipline._id }, {$pull: {'disciplines':{'_id':discipline._id}}}, {}, (err, data) => {});
+            if (!data) {
+                return res.status(404).send({ error: 'discipline.not.found'});
+            }
 
-        return res.send();
+            if (data.isDeleted) {
+                data.isDeleted = false;
+                data.deletedAt = null;
+            } else {
+                data.isDeleted = true;
+                data.deletedAt = Date.now();
+            }
+            
+            await data.save();
+
+            Plan.update({'disciplines._id': data._id }, {$pull: {'disciplines':{'_id':data._id}}}, {}, (err, data) => {});           
+        } catch (error) {
+            return res.status(400).send({ error: error});
+        }
+    
+        return res.status(201).json();
     }
 }
