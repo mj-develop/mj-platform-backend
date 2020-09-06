@@ -65,6 +65,15 @@ const PlanSchema = new Schema({
             required: [true, 'discipline.name.is.empty']
         },
     },
+    students: [{
+        _id: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'students'
+        },
+        name: {
+            type: String
+        },
+    }],
     quant_theoretical_classes:{
         type: Number
     },

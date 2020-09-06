@@ -1,6 +1,7 @@
 const Student = require('../models/Student');
 const Class = require('../models/Class');
 const User = require('../models/User');
+const Plan = require('../models/Plan');
 
 module.exports = {
 
@@ -61,5 +62,24 @@ module.exports = {
         Class.update({'students._id': student._id }, {$pull: {'students':{'_id':student._id}}}, {}, (err, data) => {});
 
         return res.send();
+    },
+
+    async register(req, res) {
+        try {
+            const student = await Student.findById(req.params.id);
+
+            const plan = await Plan.update(
+                {"_id": req.body.plan_id}, 
+                {$push: 
+                    {'students':{'_id':student._id, 'name': student.name}}
+                }
+            );
+
+            const updt_student = Student.update({'_id': req.params.id}, {$set: {'plan.name': `${plan.education_type} - ${plan.period}`}}, {}, (err, data) => {});
+
+            return res.send(200).send(updt_student);
+        } catch (error) {
+            return res.status(400).send({ error: 'was.not.possible.to.register'});
+        }
     }
 }

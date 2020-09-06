@@ -20,6 +20,7 @@ routes.get("/students/:id", StudentController.show);
 routes.post("/students", StudentController.create);
 routes.put("/students/:id", StudentController.update);
 routes.delete("/students/:id", StudentController.destroy);
+routes.post("/students/:id", StudentController.register);
 
 routes.get("/teachers", TeacherController.index);
 routes.get("/teachers/:id", TeacherController.show);

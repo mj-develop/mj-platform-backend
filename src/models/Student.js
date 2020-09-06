@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const Schema =  mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate');
 
 const utils = require('../util/utils');
 
-const StudentSchema = new mongoose.Schema({
+const StudentSchema = new Schema({
     account: {
         type: String,
         required: false
@@ -48,6 +49,15 @@ const StudentSchema = new mongoose.Schema({
         complement: String,
         cep: String,
         street: String
+    },
+    plan: {
+        _id: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'plans'
+        },
+        name: {
+            type: String
+        },
     },
     createdAt: {
         type: Date,

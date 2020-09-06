@@ -22,8 +22,18 @@ module.exports = {
     },
 
     async create (req, res) {
-        try { 
-            const plan = await Plan.create(req.body);
+        try {
+            let data = req.body;
+
+            if (data.access_time.duration == '12') {
+                data.period = "anual";
+            } else if (data.access_time.duration == '6') {
+                data.period = "semestral";
+            } else {
+                data.period = "trimestral";
+            }
+                
+            const plan = await Plan.create(data);
 
             return res.send({ plan });
         } catch(err) {
