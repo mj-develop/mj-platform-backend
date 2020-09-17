@@ -9,6 +9,7 @@ const DisciplineController = require('./controllers/disciplineController');
 const TeacherController = require('./controllers/teacherController');
 const PlanController = require('./controllers/planController');
 const PostController = require('./controllers/postController');
+const CommentController = require('./controllers/commentController');
 
 routes.post("/register", AuthController.register);
 routes.post("/login", AuthController.login);
@@ -57,8 +58,15 @@ routes.patch("/plans/:id/disciplines", PlanController.managerDisciplines);
 
 routes.get("/posts", PostController.index);
 routes.get("/posts/:id", PostController.show);
+routes.get("/posts/:id/comments", PostController.getComments);
 routes.post("/posts", PostController.create);
 routes.put("/posts/:id", PostController.update);
 routes.delete("/posts/:id", PostController.destroy);
+
+routes.get("/comments", CommentController.index);
+routes.get("/comments/:id", CommentController.show);
+routes.post("/comments", CommentController.create);
+routes.put("/comments/:id", CommentController.update);
+routes.delete("/comments/:id", CommentController.destroy);
 
 module.exports = routes;

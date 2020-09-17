@@ -1,3 +1,4 @@
+const Comments = require('../models/Comments');
 const Post = require('../models/Post');
 const utils = require('../util/utils');
 
@@ -70,32 +71,15 @@ module.exports = {
         return res.status(201).json();
     },
 
-    async managerDisciplines(req, res) {
-        const { action } = req.query;
-
-        const disciplines = req.body.disciplines;
-
+    async getComments(req, res) {
         try {
-            if (action.toLowerCase() == 'add') {
-                Object.keys(disciplines).map(async (index) => {
-                    await Plan.update(
-                        {'_id':req.params.id}, 
-                        {$push: {'disciplines':{'_id':disciplines[index]._id, 'name': disciplines[index].name}}}
-                    )
-                })
-            } else {
-                Object.keys(disciplines).map(async (index) => {
-                    Plan.update(
-                        {'_id':req.params.id, 'disciplines._id': disciplines[index]._id }, 
-                        {$pull: {'disciplines':{'_id':disciplines[index]._id}}}, 
-                        {}, 
-                        (err, data) => {}
-                    )
-                })
-            }
+            let data = await Comments.find({'post_id': req.params.id, 'isDeleted': false});
 
-            const plan = await Plan.findById(req.params.id);
-            return res.json(plan);
+            if (!data) {
+                return res.status(404).send({ error: 'comments.not.exists'});
+            }
+            
+            return res.status(200).json(data);
         } catch (error) {
             return res.status(400).send({ error: error});
         }
