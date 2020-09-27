@@ -5,8 +5,11 @@ const mongoosePaginate = require('mongoose-paginate');
 const CommentSchema = new Schema({
     post_id: {
         type: Schema.Types.ObjectId, 
-        ref: 'posts',
-        required: [true, 'post.id.is.empty'],
+        ref: 'posts'
+    },
+    doubts_id: {
+        type: Schema.Types.ObjectId, 
+        ref: 'doubts'
     },
     message: {
         type: String,
@@ -18,8 +21,11 @@ const CommentSchema = new Schema({
     author: {
         _id: {
             type: Schema.Types.ObjectId,
-            ref: 'teachers',
-            require: [true, 'teacher.id.is.required']
+            require: [true, 'author.id.is.required']
+        },
+        type: {
+            type: String,
+            enum: ['student', 'teacher']
         },
         name: String,
         photo: String
