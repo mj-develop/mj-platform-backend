@@ -11,6 +11,7 @@ const PlanController = require('./controllers/planController');
 const PostController = require('./controllers/postController');
 const CommentController = require('./controllers/commentController');
 const ModuleController = require('./controllers/moduleController');
+const LessonController = require('./controllers/lessonController');
 
 routes.post("/register", AuthController.register);
 routes.post("/login", AuthController.login);
@@ -75,5 +76,11 @@ routes.get("/modules/:id", ModuleController.show);
 routes.post("/modules", ModuleController.create);
 routes.put("/modules/:id", ModuleController.update);
 routes.delete("/modules/:id", ModuleController.destroy);
+
+routes.get("/lessons", LessonController.index);
+routes.get("/lessons/:id", LessonController.show);
+routes.post("/lessons", LessonController.create);
+routes.put("/lessons/:id", LessonController.update);
+routes.delete("/lessons/:id", LessonController.destroy);
 
 module.exports = routes;
