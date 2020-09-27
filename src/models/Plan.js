@@ -54,10 +54,10 @@ const PlanSchema = new Schema({
         type: Number,
         required: [true, 'cash.value.is.empty']
     },
-    disciplines: [{
+    courses: [{
         _id: { 
             type: Schema.Types.ObjectId, 
-            ref: 'disciplines'       
+            ref: 'courses'       
         },
         name: {
             type: String
