@@ -10,6 +10,7 @@ const TeacherController = require('./controllers/teacherController');
 const PlanController = require('./controllers/planController');
 const PostController = require('./controllers/postController');
 const CommentController = require('./controllers/commentController');
+const ModuleController = require('./controllers/moduleController');
 
 routes.post("/register", AuthController.register);
 routes.post("/login", AuthController.login);
@@ -68,5 +69,11 @@ routes.get("/comments/:id", CommentController.show);
 routes.post("/comments", CommentController.create);
 routes.put("/comments/:id", CommentController.update);
 routes.delete("/comments/:id", CommentController.destroy);
+
+routes.get("/modules", ModuleController.index);
+routes.get("/modules/:id", ModuleController.show);
+routes.post("/modules", ModuleController.create);
+routes.put("/modules/:id", ModuleController.update);
+routes.delete("/modules/:id", ModuleController.destroy);
 
 module.exports = routes;
