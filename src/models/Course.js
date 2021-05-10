@@ -22,6 +22,21 @@ const CourseSchema = new mongoose.Schema({
             required: [true, 'teacher.name.is.empty']
         },
     },
+    students: [{
+        _id: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'students',
+            validate: {
+                validator: async function(id) {
+                    return await Student.findById(id);
+                },
+                message: 'student.not.found'
+            },
+
+        },
+        name: String,
+        expiration_date: Date,
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

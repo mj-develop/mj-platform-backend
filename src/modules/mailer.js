@@ -5,7 +5,7 @@ const path = require('path');
 const service = process.env.SERVICE;
 const port = process.env.PORT;
 const pass = process.env.PASS;
-const user = process.env.USER;
+const user = process.env.EMAIL;
 
 const transport = nodemailer.createTransport({
     service,

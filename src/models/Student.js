@@ -18,6 +18,10 @@ const StudentSchema = new Schema({
         type: String,
         required: [true, 'name.is.empty']
     },
+    phone: {
+        type: String,
+        required: [true, 'name.is.empty']
+    },
     social_name: {
         type: String,
         required: [true, 'social.name.is.empty']
@@ -55,15 +59,24 @@ const StudentSchema = new Schema({
         cep: String,
         street: String
     },
-    plan: {
+    courses: [{
         _id: { 
             type: Schema.Types.ObjectId, 
-            ref: 'plans'
+            ref: 'courses'
         },
-        name: {
-            type: String
+        name: String,
+        registration_date: Date,
+        expiration_date: String,
+        plan: {
+            _id: { 
+                type: Schema.Types.ObjectId, 
+                ref: 'plans'
+            },
+            name: {
+                type: String
+            },
         },
-    },
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
